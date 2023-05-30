@@ -1,17 +1,19 @@
 
 void GaussPlotSr(){
+
+	// Set value
+	int count_min = 97;
+	int count_max = 170;
+	int Fre_Max = 139;
+	//
+
 	TCanvas *c1 = new TCanvas("c1", "Gauss", 800, 600);
 	
-	TH1F *hist = new TH1F("hist", "Do Thi Histogram So Dem{}^{226}Ra 5#muCi", 200, 97, 170);
+	TH1F *hist = new TH1F("hist", "Do Thi Histogram So Dem{}^{226}Ra 5#muCi", 200, count_min, count_max);
 	
 	
 	std::ifstream file;
 	file.open("Data_Output/Only_Source_1000.txt", std::ios::in);
-	
-	// Skip the first line
-	std::string line;
-	std::getline(file, line);
-	// Skip the first line
 	
 	double value;
 	
@@ -32,7 +34,7 @@ void GaussPlotSr(){
 	hist->Draw();
 	
 	// Fit Gauss
-	TF1 *mygauss = new TF1("mygauss", "gaus", 97, 170);
+	TF1 *mygauss = new TF1("mygauss", "gaus", count_min, count_max);
 	mygauss->SetLineColor(kRed);
 	hist->Fit(mygauss, "R");
 	
@@ -41,7 +43,9 @@ void GaussPlotSr(){
 	legend->AddEntry(hist, "Du Lieu Thuc Nghiem", "f");
 	legend->AddEntry(mygauss, "Gauss", "l");
 	legend->Draw();
-
+	
+	// Show fit Parameters 
+	mygauss->SetParameters(hist->GetEntries(), hist->GetMean(), hist->GetRMS());
 	
 	c1->Update();
 	c1->Modified();
